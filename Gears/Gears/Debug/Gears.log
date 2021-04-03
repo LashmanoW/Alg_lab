@@ -1,4 +1,4 @@
 ﻿  Gears.cpp
-C:\Users\79371\Documents\Prog_LAB\Gears\Gears\Gears\Gears.cpp(69,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\79371\Documents\Prog_LAB\Gears\Gears\Gears\Gears.cpp(106,21): warning C4018: '<': signed/unsigned mismatch
-  Gears.vcxproj -> C:\Users\79371\Documents\Prog_LAB\Gears\Gears\Debug\Gears.exe
+C:\Users\79371\Documents\GitHub\Alg_lab\Gears\Gears\Gears.cpp(71,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\79371\Documents\GitHub\Alg_lab\Gears\Gears\Gears.cpp(110,21): warning C4018: '<': signed/unsigned mismatch
+  Gears.vcxproj -> C:\Users\79371\Documents\GitHub\Alg_lab\Gears\Debug\Gears.exe

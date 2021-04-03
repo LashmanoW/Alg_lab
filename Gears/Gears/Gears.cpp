@@ -12,16 +12,18 @@ using Rotation = std::vector<std::string>;
 struct Args
 {
 	std::string inputFileName;	
+	std::string outputFileName;
 };
 
 std::optional<Args> ParseArgs(int argc, char* argv[])
 {
-	if (argc != 2)
+	if (argc != 3)
 	{
 		return std::nullopt;
 	}
 	Args args;
 	args.inputFileName = argv[1];
+	args.outputFileName = argv[2];
 
 	return args;
 }
@@ -97,6 +99,8 @@ int main(int argc, char* argv[])
 	bool block = false;
 	GraphRec(0, 1, gearsRotation, gearsGraph, block);
 
+	std::ofstream output;
+	output.open(args->outputFileName);
 	if (block)
 	{
 		std::cout << "block";
@@ -105,7 +109,7 @@ int main(int argc, char* argv[])
 	{
 		for (int i = 1; i < gearsRotation.size(); i++)
 		{
-			std::cout << gearsRotation[i] << std::endl;
+			output << gearsRotation[i] << std::endl;
 		}
 	}
 
