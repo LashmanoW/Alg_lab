@@ -2,9 +2,8 @@
 #include <fstream>
 #include <optional>
 #include <string>
-
 #include <vector>
-
+#include <queue>
 
 using Graph = std::vector<std::vector<int>>;
 using Rotation = std::vector<std::string>;
@@ -30,20 +29,15 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 
 void GetGraph(const int M, const int N, Graph& graph, std::ifstream& input)
 {
-	for (int i = 0; i < M; i++)
-	{
-		for (int j = 0; j < M; j++)
-		{
-			graph[i][j] = 0;			
-		}
-	}
 
 	int numOne, numTwo;
 	for (int i = 0; i < N; i++)
 	{
 		input >> numOne >> numTwo;
-		graph[numOne][numTwo] = 1;
-		graph[numTwo][numOne] = 1;
+		numOne--;
+		numTwo--;
+		graph[numOne].push_back(numTwo);
+		graph[numTwo].push_back(numOne);
 	}
 }
 
@@ -59,26 +53,30 @@ void GetRotation(int k_befor, int k, Rotation& gearsRotation)
 	}
 }
 
-void GraphRec(int k_befor, int k, Rotation& gearsRotation, Graph& gearsGraph, bool& block)
-{
-	std::string rot;
-	if (!block)
+void GraphRec(int k, Rotation& gearsRotation, Graph& gearsGraph, bool& block)
+{	
+	std::queue<int> q;
+	q.push(k);		
+	
+	while (!q.empty() && !block) 
 	{
-		if (gearsRotation[k] == "immovable")
+		int v = q.front();
+		q.pop();
+		for (size_t i = 0; i < gearsGraph[v].size(); i++) 
 		{
-			GetRotation(k_befor, k, gearsRotation);
-			rot = gearsRotation[k];
-			for (int i = 1; i < gearsRotation.size(); i++)
+			int to = gearsGraph[v][i];
+			if (!block)
 			{
-				if ((gearsGraph[k][i] == 1) && (i != k_befor))
+				if (gearsRotation[to] == "immovable")
 				{
-					GraphRec(k, i, gearsRotation, gearsGraph, block);
+					q.push(to);
+					GetRotation(v, to, gearsRotation);
 				}
-			}
-		}
-		else if(gearsRotation[k] == gearsRotation[k_befor])
-		{
-			block = true;
+				else if (gearsRotation[v] == gearsRotation[to])
+				{
+					block = true;
+				}
+			}					
 		}
 	}	
 }
@@ -90,24 +88,24 @@ int main(int argc, char* argv[])
 	input.open(args->inputFileName);
 
 	int M, N;	
-	input >> M >> N;
-	Graph gearsGraph(M + 1, std::vector<int>(M + 1));
-	Rotation gearsRotation(M + 1, "immovable");
-	gearsRotation[0] = "unclockwise";
-	GetGraph(M + 1, N, gearsGraph, input);
+	input >> M >> N;	
+	Graph gearsGraph(M, std::vector<int>());
+	Rotation gearsRotation(M, "immovable");
+	gearsRotation[0] = "clockwise";
+	GetGraph(M, N, gearsGraph, input);
 	
 	bool block = false;
-	GraphRec(0, 1, gearsRotation, gearsGraph, block);
+	GraphRec(0, gearsRotation, gearsGraph, block);
 
 	std::ofstream output;
 	output.open(args->outputFileName);
 	if (block)
 	{
-		std::cout << "block";
+		output << "block";
 	}
 	else
 	{
-		for (int i = 1; i < gearsRotation.size(); i++)
+		for (int i = 0; i < gearsRotation.size(); i++)
 		{
 			output << gearsRotation[i] << std::endl;
 		}
